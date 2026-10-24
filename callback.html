@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TikTok bağlantısı / TikTok connection</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:46rem;margin:2rem auto;padding:0 1rem;line-height:1.6}
+  textarea{width:100%;font-family:monospace;box-sizing:border-box}
+  button{padding:.5rem 1rem;margin-top:.5rem;font-size:1rem}
+  .err{color:#b00020}
+</style>
+</head>
+<body>
+<h1>Altın Fiyat Gündemi Video Aracı</h1>
+<p id="status"></p>
+<textarea id="address" rows="5" readonly></textarea><br>
+<button id="copy" type="button">Adresi kopyala / Copy address</button>
+<p><small>Bu adres yalnızca sizin tarayıcınızda gösterilir, hiçbir yere gönderilmez. / This address is shown only in your browser and is not sent anywhere.</small></p>
+<script>
+  var params = new URLSearchParams(location.search);
+  var status = document.getElementById("status");
+  var box = document.getElementById("address");
+  box.value = location.href;
+  if (params.get("error")) {
+    status.className = "err";
+    status.textContent = "TikTok girişi tamamlanamadı: " + (params.get("error_description") || params.get("error")) +
+      " / TikTok login failed.";
+  } else if (params.get("code")) {
+    status.textContent = "TikTok girişi tamamlandı. Aşağıdaki adresin tamamını kopyalayıp Telegram grubunda /tiktokkod komutundan sonra yapıştırın. " +
+      "/ TikTok login completed. Copy the full address below and paste it in the Telegram group after the /tiktokkod command.";
+  } else {
+    status.textContent = "Bu sayfa TikTok girişinden sonra açılır. / This page opens after the TikTok login.";
+  }
+  document.getElementById("copy").addEventListener("click", function () {
+    box.select();
+    if (navigator.clipboard) navigator.clipboard.writeText(box.value);
+    else document.execCommand("copy");
+  });
+</script>
+</body>
+</html>
